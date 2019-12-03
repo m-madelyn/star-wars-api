@@ -1,5 +1,7 @@
 const express = require('express')
 const models = require('./models')
+const bodyParser = require('body-parser')
+
 
 let app = express()
 
@@ -10,7 +12,7 @@ app.get('/rebels', (request, response) => {
 })
 
 app.get('/rebels/:identifier', (request, response) => {
-  if (typeof request.params.identifier === 'integer') {
+  if (typeof request.params.identifier === 'number') {
     models.Rebels.findAll({ where: { id: request.params.identifier }, }).then((rebel) => {
       response.send(rebel)
     })
@@ -21,7 +23,7 @@ app.get('/rebels/:identifier', (request, response) => {
   }
 })
 
-app.post('/rebels', (request, response) => {
+app.post('/rebels', bodyParser.json(), (request, response) => {
   const { name, callSign, rank } = request.body
 
   if (!name || !callSign || !rank) {
